@@ -15,7 +15,8 @@ class FileType extends Migration
     {
         Schema::create('file_type', function (Blueprint $table) {
             $table->id();
-            $table->string('extension');
+            $table->string('extension')->unique();
+            $table->timestamps();
         });
     }
 
