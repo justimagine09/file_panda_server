@@ -16,9 +16,9 @@ class Files extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('file_name');
-            $table->string('thumbnail');
+            $table->string('thumbnail')->nullable();
             $table->string('thumbnail_small');
             $table->timestamps();
 

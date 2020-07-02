@@ -28,4 +28,13 @@ Route::group([
 });
 
 
-Route::post('file', 'API\FilesController@uploadMp4');
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'file'
+
+], function ($router) {
+    Route::post('mp4', 'API\FilesController@uploadMp4');
+    Route::post('jpg', 'API\FilesController@uploadJpg');
+});
+
+Route::get('file_types', 'API\FileTypeController@index');
