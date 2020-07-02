@@ -33,8 +33,9 @@ Route::group([
     'prefix' => 'file'
 
 ], function ($router) {
-    Route::post('mp4', 'API\FilesController@uploadMp4');
-    Route::post('jpg', 'API\FilesController@uploadJpg');
+    Route::post('upload/mp4', 'API\FilesController@uploadMp4');
+    Route::post('upload/jpg', 'API\FilesController@uploadJpg');
+    Route::get('search', 'API\FilesController@search');
 });
 
 Route::get('file_types', 'API\FileTypeController@index');

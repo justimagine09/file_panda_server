@@ -19,7 +19,30 @@ class FilesController extends Controller
      */
     public function index()
     {
-        //
+        //  
+    }
+
+    /*
+        search by title, file_type, user description
+    */
+    public function search(Request $request)
+    {
+        // get logged in user
+        $JWTAuthController = new JWTAuthController();
+        $current_user = $JWTAuthController->getCurrentUser();
+
+        // get query params to search
+        $text = $request->text;
+        $file_type = $request->file_type;
+
+        return Files::where(function($query) use ($text, $file_type) {
+            return $query->where('title', 'LIKE', "%$text%")
+            ->orWhere('description', 'LIKE', "%$text%");
+        })->where(function($query) use ($text, $file_type) {
+            if($file_type) {
+                return $query->where('file_type_id', $file_type);
+            }
+        })->where('user_id', $current_user->id)->get();
     }
 
     public function uploadMp4(Request $request, Response $response)
@@ -51,9 +74,9 @@ class FilesController extends Controller
 
         $files->title = $request->title;
         $files->description = $request->description;
-        $files->file_name = $videoName;
-        $files->thumbnail =  $thumbnailName;
-        $files->thumbnail_small  = $thumbnailSmallName;
+        $files->file_name = public_path('storage/uploads/videos/').$videoName;
+        $files->thumbnail =  public_path('storage/uploads/thumbnails/').$thumbnailName;
+        $files->thumbnail_small  = public_path('storage/uploads/thumbnails/').$thumbnailSmallName;
         $files->user_id = $current_user->id;
         $files->file_type_id = $fileTypeId;
 
@@ -75,22 +98,22 @@ class FilesController extends Controller
 
         
         // Move uploaded files to specific path
-        $request->image->move(public_path('storage/uploads/jpgs'), $fileName);
+        $request->image->move(public_path('storage/uploads/jpgs/'), $fileName);
 
         // Create small thumbnail for mobile search
         $img = Image::make(public_path('storage/uploads/jpgs/').$fileName);
         
         $img->resize(100, null, function ($constraint) {
             $constraint->aspectRatio();
-        })->save(public_path('storage/uploads/jpgs/').$thumbnailSmallName);
+        })->save(public_path('storage/uploads/thumbnails/').$thumbnailSmallName);
         
         // Add Record to files table
         $fileTypeId = FileType::firstWhere('extension', 'JPG')->id;
 
         $files->title = $request->title;
         $files->description = $request->description;
-        $files->file_name = $fileName;
-        $files->thumbnail_small  = $thumbnailSmallName;
+        $files->file_name = public_path('storage/uploads/jpgs/') . $fileName;
+        $files->thumbnail_small  = public_path('storage/uploads/thumbnails/') . $thumbnailSmallName;
         $files->user_id = $current_user->id;
         $files->file_type_id = $fileTypeId;
 
