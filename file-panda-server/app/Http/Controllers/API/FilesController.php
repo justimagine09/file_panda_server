@@ -9,6 +9,7 @@ use App\FileType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Image;
+use Illuminate\Support\Facades\Storage;
 
 class FilesController extends Controller
 {
@@ -58,25 +59,25 @@ class FilesController extends Controller
         $videoName = $current_user->id . '' . time() . '.' . $request->video->extension(); 
    
         // Move uploaded files to specific path
-        $request->video->move(public_path('storage/uploads/videos'), $videoName);
-        $request->thumbnail->move(public_path('storage/uploads/thumbnails'), $thumbnailName);
+        $request->video->move(public_path('storage/uploads/'), $videoName);
+        $request->thumbnail->move(public_path('storage/uploads/'), $thumbnailName);
 
         
-        $img = Image::make('storage/uploads/thumbnails/'.$thumbnailName);
+        $img = Image::make('storage/uploads/'.$thumbnailName);
 
         // Create small thumbnail for mobile search
         $img->resize(100, null, function ($constraint) {
             $constraint->aspectRatio();
-        })->save(public_path('storage/uploads/thumbnails/').$thumbnailSmallName);
+        })->save(public_path('storage/uploads/').$thumbnailSmallName);
         
         // Add Record to files table
         $fileTypeId = FileType::firstWhere('extension', 'MP4')->id;
 
         $files->title = $request->title;
         $files->description = $request->description;
-        $files->file_name = public_path('storage/uploads/videos/').$videoName;
-        $files->thumbnail =  public_path('storage/uploads/thumbnails/').$thumbnailName;
-        $files->thumbnail_small  = public_path('storage/uploads/thumbnails/').$thumbnailSmallName;
+        $files->file_name = $videoName;
+        $files->thumbnail = $thumbnailName;
+        $files->thumbnail_small = $thumbnailSmallName;
         $files->user_id = $current_user->id;
         $files->file_type_id = $fileTypeId;
 
@@ -98,22 +99,22 @@ class FilesController extends Controller
 
         
         // Move uploaded files to specific path
-        $request->image->move(public_path('storage/uploads/jpgs/'), $fileName);
+        $request->image->move(public_path('storage/uploads/'), $fileName);
 
         // Create small thumbnail for mobile search
-        $img = Image::make(public_path('storage/uploads/jpgs/').$fileName);
+        $img = Image::make(public_path('storage/uploads/').$fileName);
         
         $img->resize(100, null, function ($constraint) {
             $constraint->aspectRatio();
-        })->save(public_path('storage/uploads/thumbnails/').$thumbnailSmallName);
+        })->save(public_path('storage/uploads/').$thumbnailSmallName);
         
         // Add Record to files table
         $fileTypeId = FileType::firstWhere('extension', 'JPG')->id;
 
         $files->title = $request->title;
         $files->description = $request->description;
-        $files->file_name = public_path('storage/uploads/jpgs/') . $fileName;
-        $files->thumbnail_small  = public_path('storage/uploads/thumbnails/') . $thumbnailSmallName;
+        $files->file_name = $fileName;
+        $files->thumbnail_small = $thumbnailSmallName;
         $files->user_id = $current_user->id;
         $files->file_type_id = $fileTypeId;
 

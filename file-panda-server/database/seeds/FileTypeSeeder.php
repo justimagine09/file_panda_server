@@ -17,10 +17,6 @@ class FileTypeSeeder extends Seeder
         );
         
         FileType::create(
-            ['id' => 0, 'extension' => 'PDF'],
-        );
-        
-        FileType::create(
             ['id' => 0, 'extension' => 'MP4'],
         );
     }
