@@ -77,6 +77,10 @@ class JWTAuthController extends Controller
         return response()->json(auth()->user());
     }
 
+    public function getCurrentUser() {
+        return auth()->user();
+    }
+
     /**
      * Log the user out (Invalidate the token).
      *

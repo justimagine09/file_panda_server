@@ -17,6 +17,9 @@ class Files extends Migration
             $table->id();
             $table->string('title');
             $table->string('description');
+            $table->string('file_name');
+            $table->string('thumbnail');
+            $table->string('thumbnail_small');
             $table->timestamps();
 
             // Foreign keys
