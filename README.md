@@ -13,6 +13,8 @@
  - DB_PASSWORD=
 
 #Commands before you start
+ - composer dump-autoload
+ - composer install
  - php artisan migrate
  - php artisan db:seed --class=FileTypeSeeder
 
