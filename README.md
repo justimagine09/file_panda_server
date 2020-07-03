@@ -12,7 +12,10 @@
  - DB_USERNAME=root
  - DB_PASSWORD=
 
-#Commands before you start
+# Create .env
+    duplicate .env.example and rename it to .env
+    
+# Commands before you start
  - composer dump-autoload
  - composer install
  - php artisan migrate
